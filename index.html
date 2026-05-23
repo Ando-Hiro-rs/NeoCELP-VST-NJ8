@@ -58,7 +58,7 @@
 </section>
 
 <section id="s-mode" class="screen">
-  <span class="title-badge">NeoCELP & NeoVST-NJ8 v1.2</span>
+  <span class="title-badge">NeoCELP & NeoVST-NJ8 v1.3</span>
   <h1>総合的語彙力測定システム</h1>
   <p class="sub">日本人英語学習者向けの語彙力測定ツール。<br>新JACET8000ベース・3PL IRTスコアリング対応。</p>
 
@@ -312,6 +312,7 @@
       <div class="exclude-row"><span>平均±3SD範囲外の異常値除外</span><span id="ex-outlier">— 問</span></div>
       <div class="exclude-row total"><span>最終有効データ</span><span id="ex-valid">— 問</span></div>
     </div>
+    <div id="celp-proficiency" class="proficiency-card" style="display:none"></div>
   </div>
 
   <div id="result-vst-section" class="screen" style="width:100%;align-items:center;gap:16px">
@@ -321,6 +322,24 @@
       <div class="stat-card"><div class="stat-val" id="r-theta">—</div><div class="stat-lbl">IRT θ</div><div class="stat-sub" id="r-se">SE: —</div></div>
       <div class="stat-card"><div class="stat-val" id="r-vst-acc">—</div><div class="stat-lbl">正答率</div><div class="stat-sub" id="r-raw">— / —</div></div>
       <div class="stat-card"><div class="stat-val">8</div><div class="stat-lbl">頻度レベル</div><div class="stat-sub">JACET 8000</div></div>
+    </div>
+    <div class="conversion-card">
+      <div class="conversion-title">あなたの英語レベル目安</div>
+      <div class="conversion-badges">
+        <div class="conv-badge cefr">
+          <div class="conv-badge-val" id="badge-cefr">—</div>
+          <div class="conv-badge-lbl" id="badge-cefr-desc">CEFR レベル</div>
+        </div>
+        <div class="conv-badge eiken">
+          <div class="conv-badge-val" id="badge-eiken">—</div>
+          <div class="conv-badge-lbl">英検 換算目安</div>
+        </div>
+        <div class="conv-badge toeic">
+          <div class="conv-badge-val" id="badge-toeic">—</div>
+          <div class="conv-badge-lbl">TOEIC 目安</div>
+        </div>
+      </div>
+      <div class="conversion-note">※ 換算は語彙サイズに基づく目安であり、正式なスコアではありません。</div>
     </div>
     <div class="exclude-card">
       <div class="exclude-title">レベル別 推定語彙数</div>
@@ -346,7 +365,7 @@
 </section>
 
 <footer>
-  <p>NeoCELP & NeoVST-NJ8 v1.2 — 新JACET8000 + 3PL IRT</p>
+  <p>NeoCELP & NeoVST-NJ8 v1.3 — 新JACET8000 + 3PL IRT</p>
   <p><a href="https://github.com/Ando-Hiro-rs/NeoCELP-VST-NJ8">GitHub リポジトリ</a></p>
 </footer>
 
