@@ -6,7 +6,8 @@ import {
   buildSummaryCSV, makeFilename
 } from './csv-export.js';
 
-const TEST_VERSION = 'NeoCELP-VST v1.1';
+const TEST_VERSION = 'NeoCELP-VST v1.2';
+const STORAGE_KEY = 'neocelp_vst_participant_ids';
 
 const state = {
   mode: null,
@@ -18,6 +19,7 @@ const state = {
   celpRawTrials: [],
   vstRawTrials: [],
   celpPracticeResults: [],
+  practiceStats: null,
 };
 
 let celpItems = null;
@@ -47,25 +49,98 @@ function toast(msg) {
   setTimeout(() => t.classList.remove('show'), 2000);
 }
 
+function getStoredIds() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function addStoredId(id, mode) {
+  try {
+    const ids = getStoredIds();
+    ids.push({
+      id,
+      mode,
+      timestamp: new Date().toISOString(),
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+  } catch (e) {
+    console.warn('localStorage への保存に失敗しました', e);
+  }
+}
+
+function isIdDuplicate(id, mode) {
+  const ids = getStoredIds();
+  return ids.some(record => record.id === id && record.mode === mode);
+}
+
+function checkConsentForm() {
+  const c1 = document.getElementById('consent-1').checked;
+  const c2 = document.getElementById('consent-2').checked;
+  const c3 = document.getElementById('consent-3').checked;
+  document.getElementById('consent-btn').disabled = !(c1 && c2 && c3);
+}
+
+function submitConsent() {
+  state.session.consent_agreed = true;
+  state.session.consent_timestamp = new Date().toISOString();
+  show('s-mode');
+}
+
 function selectMode(mode) {
   state.mode = mode;
   show('s-info');
 }
 
+function getModeLabel(mode) {
+  const labels = {
+    'celp_only': 'NeoCELPのみ',
+    'vst_only': 'NeoVST-NJ8のみ',
+    'combined': '複合型テスト',
+  };
+  return labels[mode] || mode;
+}
+
 function checkInfoForm() {
   const id = document.getElementById('f-id').value.trim();
-  document.getElementById('info-btn').disabled = id.length === 0;
+  const warningEl = document.getElementById('id-warning');
+  const btn = document.getElementById('info-btn');
+
+  if (id.length === 0) {
+    warningEl.style.display = 'none';
+    btn.disabled = true;
+    return;
+  }
+
+  if (isIdDuplicate(id, state.mode)) {
+    warningEl.style.display = 'block';
+    warningEl.textContent = `⚠ このIDは「${getModeLabel(state.mode)}」で既に受験記録があります。別のIDを使用してください。`;
+    btn.disabled = true;
+  } else {
+    warningEl.style.display = 'none';
+    btn.disabled = false;
+  }
 }
 
 function submitInfo() {
+  const id = document.getElementById('f-id').value.trim();
+  if (isIdDuplicate(id, state.mode)) {
+    alert(`このIDは「${getModeLabel(state.mode)}」で既に受験済みです。別のIDを使用してください。`);
+    return;
+  }
+
   state.participant = {
-    id: document.getElementById('f-id').value.trim(),
+    id,
     age: document.getElementById('f-age').value.trim(),
     gender: document.getElementById('f-gender').value,
     l1: document.getElementById('f-l1').value,
     learning_years: document.getElementById('f-years').value.trim(),
   };
   state.session = {
+    ...state.session,
     test_version: TEST_VERSION,
     mode: state.mode,
     start_time: new Date().toISOString(),
@@ -117,6 +192,14 @@ function startCelpPractice() {
       state.celpPracticeResults = practiceResults;
       const correctCount = practiceResults.filter(r => r.is_correct).length;
       const acc = Math.round((correctCount / practiceResults.length) * 100);
+      const validRts = practiceResults.filter(r => r.is_correct && r.rt_ms > 100).map(r => r.rt_ms);
+      const meanRt = validRts.length ? Math.round(validRts.reduce((a, b) => a + b, 0) / validRts.length) : 0;
+      state.practiceStats = {
+        total: practiceResults.length,
+        correct: correctCount,
+        accuracy: acc,
+        mean_rt: meanRt,
+      };
       document.getElementById('practice-acc').textContent = `${acc}%`;
       document.getElementById('practice-msg').textContent = acc >= 75
         ? '練習お疲れ様でした。準備ができたら本試験を始めましょう。'
@@ -154,7 +237,7 @@ function startCelpMain() {
       if (state.mode === 'combined') {
         show('s-celp-end');
       } else {
-        showResult();
+        finishSession();
       }
     },
   }, { showFeedback: false });
@@ -185,7 +268,7 @@ function startVst() {
         console.error('VST整合性エラー:', issues);
       }
       state.vstResult = scoreVST(results, vstItems);
-      showResult();
+      finishSession();
     },
   });
   vstRunner.start();
@@ -193,6 +276,11 @@ function startVst() {
 
 function continueToVst() {
   show('s-vst-instructions');
+}
+
+function finishSession() {
+  addStoredId(state.participant.id, state.mode);
+  showResult();
 }
 
 function showResult() {
@@ -264,7 +352,11 @@ function showResult() {
 
 function exportCelpTrials() {
   if (!state.celpResult) return;
-  const csv = buildCelpTrialsCSV(state.participant, state.session, state.celpResult.cleaned_trials);
+  const csv = buildCelpTrialsCSV(
+    state.participant, state.session,
+    state.celpResult.cleaned_trials,
+    state.celpPracticeResults
+  );
   downloadCSV(makeFilename(state.participant, state.session, 'celp_trials'), csv);
   toast('CELP試行データをダウンロードしました');
 }
@@ -277,7 +369,11 @@ function exportVstTrials() {
 }
 
 function exportSummary() {
-  const csv = buildSummaryCSV(state.participant, state.session, state.celpResult, state.vstResult);
+  const csv = buildSummaryCSV(
+    state.participant, state.session,
+    state.celpResult, state.vstResult,
+    state.practiceStats
+  );
   downloadCSV(makeFilename(state.participant, state.session, 'summary'), csv);
   toast('集計データをダウンロードしました');
 }
@@ -288,6 +384,7 @@ function restart() {
     celpResult: null, vstResult: null,
     celpRawTrials: [], vstRawTrials: [],
     celpPracticeResults: [],
+    practiceStats: null,
   });
   document.getElementById('f-id').value = '';
   document.getElementById('f-age').value = '';
@@ -297,6 +394,7 @@ function restart() {
   document.querySelectorAll('.level-opt').forEach(o => o.classList.remove('selected'));
   document.getElementById('level-btn').disabled = true;
   document.getElementById('info-btn').disabled = true;
+  document.getElementById('id-warning').style.display = 'none';
   show('s-mode');
 }
 
@@ -307,6 +405,8 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+window.checkConsentForm = checkConsentForm;
+window.submitConsent = submitConsent;
 window.selectMode = selectMode;
 window.checkInfoForm = checkInfoForm;
 window.submitInfo = submitInfo;
@@ -323,7 +423,7 @@ window.exportSummary = exportSummary;
 window.restart = restart;
 
 loadData().then(() => {
-  show('s-mode');
+  show('s-consent');
 }).catch(err => {
   console.error('データ読み込みに失敗:', err);
   document.body.innerHTML = '<div style="padding:2rem;text-align:center;color:red">データの読み込みに失敗しました。ブラウザのコンソールを確認してください。</div>';
