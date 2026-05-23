@@ -1,4 +1,4 @@
-# NeoCELP & NeoVST-NJ8
+# NeoCELPテスト & NeoVST-NJ8
 
 日本人英語学習者向けの総合的語彙力測定システム。語彙処理速度 (CELP) と語彙サイズ (VST-NJ8) を Web ブラウザで測定し、結果を CSV で出力します。
 
