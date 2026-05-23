@@ -8,16 +8,13 @@
 
 - **3モード対応** — NeoCELP のみ / NeoVST-NJ8 のみ / 複合型テスト から選択可能
 - **新JACET8000ベース** — 2016年改訂版の頻度リストに準拠
-- **3PL IRTスコアリング内蔵** — JACET公式 Excel シートのアルゴリズムを完全移植
-- **自動データクリーニング** — 不正解・フライング応答・±3SD外れ値を自動除外
+- **3PL IRTスコアリング内蔵** — JACET語彙研究会が提供している、公式 Excel 語彙サイズ計算シートのアルゴリズムを移植
+- **自動データクリーニング** — 不正解・フライング応答・±3SD外れ値を自動除外（井関, 2020; 大久保, 2011; 橋本, 2010）
 - **CSV出力対応** — シャッフル整合性を保証した試行レベルデータと集計データの両方を出力
 - **サーバー不要** — HTML/CSS/JavaScript のみで動作。GitHub Pages で即公開可能
 
-## デモ
-
+## テストのURL
 `https://Ando-Hiro-rs.github.io/NeoCELP-VST-NJ8/`
-
-(GitHub Pages を有効化すると、上記 URL でアクセスできます)
 
 ## ローカルで動かす
 
@@ -60,7 +57,7 @@ python3 -m http.server 8000
 このツールを研究で使用された場合は、以下のように引用してください。
 
 ```
-[安藤嘉]. (2025). NeoCELP & NeoVST-NJ8: 日本人英語学習者向け総合的語彙力測定システム.
+安藤嘉. (2026). NeoCELP & NeoVST-NJ8: 日本人英語学習者向け総合的語彙力測定システム.
 GitHub. https://github.com/Ando-Hiro-rs/NeoCELP-VST-NJ8
 ```
 
@@ -70,11 +67,12 @@ GitHub. https://github.com/Ando-Hiro-rs/NeoCELP-VST-NJ8
 
 - **VST-NJ8**: Hamada, A., Ishii, T., Kanazawa, Y., Kojima, M., Maeda, M., Mori, S., Saito, A., Sawano, R., Shimoda, Y., Tatsukawa, K., Tomita, K., Toyokuni, T., Tsubaki, M., & Yanagisawa, A. (2021). Development of a Vocabulary Size Test for Japanese EFL Learners Using the New JACET List of 8,000 Basic Words. *JACET Journal*, *65*, 23–45.
 - **CELP**: 横川博一 (2006) や門田修平他（2014）などの先行研究に基づく
-また、小室竜也氏のVST-NJ8オンライン語彙サイズテストを参考にして開発しております。
+また、小室竜也氏のVST-NJ8オンライン語彙サイズテスト（https://ryuya-dot-com.github.io/OnlineVST-NJ8WithoutDontKnow/）とそのGit Hub公開コード（https://github.com/Ryuya-dot-com/OnlineVST-NJ8） を参考にして開発しております。
 ## ライセンス
 
 MIT License。研究・教育目的での自由な利用を歓迎します。
 
-## 作者
+## 制作者
 
-[安藤嘉]
+安藤嘉
+北海道教育大学札幌校教職大学院
