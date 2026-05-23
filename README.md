@@ -44,9 +44,10 @@ GitHub. https://github.com/Ando-Hiro-rs/NeoCELP-VST-NJ8
 
 ## ベースとなる先行研究
 
-- **NeoVST-NJ8**: Hamada, A., Ishii, T., Kanazawa, Y., Kojima, M., Maeda, M., Mori, S., Saito, A., Sawano, R., Shimoda, Y., Tatsukawa, K., Tomita, K., Toyokuni, T., Tsubaki, M., & Yanagisawa, A. (2021). Development of a Vocabulary Size Test for Japanese EFL Learners Using the New JACET List of 8,000 Basic Words. *JACET Journal*, *65*, 23–45. https://doi.org/10.32234/jacetjournal.65.0_23 
-- **NeoCELPテスト**: 横川博一 (2006).『日本人英語学習者の英単語親密度 文字編―教育・研究のための第二言語データベース』くろしお出版.
+- **NeoCELPテスト**:
+- 横川博一 (2006).『日本人英語学習者の英単語親密度 文字編―教育・研究のための第二言語データベース』くろしお出版.
 - 門田修平・野呂忠司・氏木道人・長谷尚弥 (編著) (2014).『英単語運用力判定ソフトを使った語彙指導』大修館書店.
+- **NeoVST-NJ8**: Hamada, A., Ishii, T., Kanazawa, Y., Kojima, M., Maeda, M., Mori, S., Saito, A., Sawano, R., Shimoda, Y., Tatsukawa, K., Tomita, K., Toyokuni, T., Tsubaki, M., & Yanagisawa, A. (2021). Development of a Vocabulary Size Test for Japanese EFL Learners Using the New JACET List of 8,000 Basic Words. *JACET Journal*, *65*, 23–45. https://doi.org/10.32234/jacetjournal.65.0_23 
 - また、小室竜也氏のVST-NJ8オンライン語彙サイズテスト（https://ryuya-dot-com.github.io/OnlineVST-NJ8WithoutDontKnow/） とそのGit Hub公開コード（https://github.com/Ryuya-dot-com/OnlineVST-NJ8/blob/main/README.md） を参考にしながら、ユーザー様に快適にご利用して頂けるように開発しております。
 ## ライセンス
 
