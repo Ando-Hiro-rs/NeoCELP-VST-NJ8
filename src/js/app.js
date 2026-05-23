@@ -6,7 +6,7 @@ import {
   buildSummaryCSV, makeFilename
 } from './csv-export.js';
 
-const TEST_VERSION = 'NeoCELP-VST v1.0';
+const TEST_VERSION = 'NeoCELP-VST v1.1';
 
 const state = {
   mode: null,
@@ -17,6 +17,7 @@ const state = {
   vstResult: null,
   celpRawTrials: [],
   vstRawTrials: [],
+  celpPracticeResults: [],
 };
 
 let celpItems = null;
@@ -73,7 +74,7 @@ function submitInfo() {
     blank_ms: CELP_TIMING.blank,
   };
   if (state.mode === 'vst_only') {
-    startVst();
+    show('s-vst-instructions');
   } else {
     show('s-level');
   }
@@ -87,10 +88,12 @@ function selectLevel(level, el) {
   document.getElementById('level-btn').disabled = false;
 }
 
-function startCelp() {
-  const pool = celpItems[state.cefrLevel];
+function showCelpInstructions() {
+  show('s-celp-instructions');
+}
+
+function startCelpPractice() {
   const practicePool = celpItems.practice;
-  const items = buildCelpTrials(pool, 40);
   const practiceItems = buildCelpTrials(practicePool, 8);
 
   const elements = {
@@ -103,33 +106,58 @@ function startCelp() {
   };
 
   document.getElementById('celp-phase').textContent = '練習';
-
   show('s-celp');
+
   celpRunner = new CelpRunner(elements, practiceItems, {
     onProgress: (i, n) => {
       document.getElementById('celp-prog-fill').style.width = `${(i / n) * 100}%`;
       document.getElementById('celp-prog-label').textContent = `${i} / ${n}`;
     },
     onComplete: (practiceResults) => {
-      document.getElementById('celp-phase').textContent = '本試験';
-      celpRunner = new CelpRunner(elements, items, {
-        onProgress: (i, n) => {
-          document.getElementById('celp-prog-fill').style.width = `${(i / n) * 100}%`;
-          document.getElementById('celp-prog-label').textContent = `${i} / ${n}`;
-        },
-        onComplete: (results) => {
-          state.celpRawTrials = results;
-          state.celpResult = cleanRtData(results);
-          if (state.mode === 'combined') {
-            show('s-celp-end');
-          } else {
-            showResult();
-          }
-        },
-      });
-      celpRunner.start();
+      state.celpPracticeResults = practiceResults;
+      const correctCount = practiceResults.filter(r => r.is_correct).length;
+      const acc = Math.round((correctCount / practiceResults.length) * 100);
+      document.getElementById('practice-acc').textContent = `${acc}%`;
+      document.getElementById('practice-msg').textContent = acc >= 75
+        ? '練習お疲れ様でした。準備ができたら本試験を始めましょう。'
+        : '練習の正答率がやや低めです。操作に慣れてから本試験を始めることをおすすめします。';
+      show('s-celp-practice-end');
     },
-  });
+  }, { showFeedback: true });
+  celpRunner.start();
+}
+
+function startCelpMain() {
+  const pool = celpItems[state.cefrLevel];
+  const items = buildCelpTrials(pool, 40);
+
+  const elements = {
+    fix: document.getElementById('celp-fix'),
+    prime: document.getElementById('celp-prime'),
+    blank: document.getElementById('celp-blank'),
+    target: document.getElementById('celp-target'),
+    btnRow: document.getElementById('celp-btn-row'),
+    feedback: document.getElementById('celp-feedback'),
+  };
+
+  document.getElementById('celp-phase').textContent = '本試験';
+  show('s-celp');
+
+  celpRunner = new CelpRunner(elements, items, {
+    onProgress: (i, n) => {
+      document.getElementById('celp-prog-fill').style.width = `${(i / n) * 100}%`;
+      document.getElementById('celp-prog-label').textContent = `${i} / ${n}`;
+    },
+    onComplete: (results) => {
+      state.celpRawTrials = results;
+      state.celpResult = cleanRtData(results);
+      if (state.mode === 'combined') {
+        show('s-celp-end');
+      } else {
+        showResult();
+      }
+    },
+  }, { showFeedback: false });
   celpRunner.start();
 }
 
@@ -164,7 +192,7 @@ function startVst() {
 }
 
 function continueToVst() {
-  startVst();
+  show('s-vst-instructions');
 }
 
 function showResult() {
@@ -259,6 +287,7 @@ function restart() {
     mode: null, participant: {}, cefrLevel: null, session: {},
     celpResult: null, vstResult: null,
     celpRawTrials: [], vstRawTrials: [],
+    celpPracticeResults: [],
   });
   document.getElementById('f-id').value = '';
   document.getElementById('f-age').value = '';
@@ -282,7 +311,10 @@ window.selectMode = selectMode;
 window.checkInfoForm = checkInfoForm;
 window.submitInfo = submitInfo;
 window.selectLevel = selectLevel;
-window.startCelp = startCelp;
+window.showCelpInstructions = showCelpInstructions;
+window.startCelpPractice = startCelpPractice;
+window.startCelpMain = startCelpMain;
+window.startVst = startVst;
 window.continueToVst = continueToVst;
 window.celpRespond = (b) => celpRunner && celpRunner.respond(b);
 window.exportCelpTrials = exportCelpTrials;
