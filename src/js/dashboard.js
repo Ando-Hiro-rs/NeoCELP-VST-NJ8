@@ -1,8 +1,7 @@
 import { parseCSV, detectCsvType, parseSummaryCSV, isOutlier, calculateDescriptiveStats, buildMergedCSV } from './dashboard-stats.js';
 import { drawHistogram, drawScatter } from './dashboard-charts.js';
 
-// ★ アクセスパスワードを設定 (重要: 自分にしか分からないものに変更してください)
-const DASHBOARD_PASSWORD = 'neocelp2026';
+const DASHBOARD_PASSWORD = 'h1r0research2026';
 const STORAGE_KEY = 'neocelp_dashboard_participants';
 const AUTH_KEY = 'neocelp_dashboard_auth';
 
