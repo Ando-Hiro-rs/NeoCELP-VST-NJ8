@@ -11,8 +11,8 @@ const TEST_VERSION = 'NeoCELP-VST v1.4';
 const STORAGE_KEY = 'neocelp_vst_participant_ids';
 
 // ★ ここに研究者のメールアドレスを設定してください
-const RESEARCHER_EMAIL = 'd12136m1@stu.hokkyodai.ac.jp';
-const RESEARCHER_NAME = '北海道教育大学 札幌校 安藤 嘉';
+const RESEARCHER_EMAIL = 'ahiro.research1006@gmail.com';
+const RESEARCHER_NAME = '安藤 嘉';
 
 const state = {
   mode: null,
