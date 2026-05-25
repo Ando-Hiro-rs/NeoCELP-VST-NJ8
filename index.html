@@ -62,7 +62,7 @@
 </section>
 
 <section id="s-mode" class="screen">
-  <span class="title-badge">NeoCELP & NeoVST-NJ8 v1.4</span>
+  <span class="title-badge">NeoCELP & NeoVST-NJ8 v1.5</span>
   <h1>総合的語彙力測定システム</h1>
   <p class="sub">日本人英語学習者向けの語彙力測定ツール。<br>新JACET8000ベース・3PL IRTスコアリング対応。</p>
 
@@ -106,38 +106,199 @@
 <section id="s-info" class="screen">
   <span class="title-badge">受験者情報</span>
   <h2>基本情報を入力してください</h2>
-  <div class="form-grid">
-    <div class="form-row full">
-      <label class="form-label" for="f-id">受験者ID <span class="req">*</span></label>
-      <input type="text" id="f-id" placeholder="例: P001" oninput="checkInfoForm()">
-      <div id="id-warning" style="display:none; font-size:11px; color:var(--color-danger); padding:6px 8px; background:var(--color-danger-bg); border-radius:6px; margin-top:4px"></div>
-    </div>
-    <div class="form-row">
-      <label class="form-label" for="f-age">年齢</label>
-      <input type="text" id="f-age" placeholder="例: 20">
-    </div>
-    <div class="form-row">
-      <label class="form-label" for="f-gender">性別</label>
-      <select id="f-gender">
-        <option value="">選択してください</option>
-        <option value="female">女性</option>
-        <option value="male">男性</option>
-        <option value="other">その他</option>
-        <option value="na">回答しない</option>
-      </select>
-    </div>
-    <div class="form-row">
-      <label class="form-label" for="f-l1">母語</label>
-      <select id="f-l1">
-        <option value="japanese">日本語</option>
-        <option value="other">その他</option>
-      </select>
-    </div>
-    <div class="form-row">
-      <label class="form-label" for="f-years">英語学習歴 (年)</label>
-      <input type="text" id="f-years" placeholder="例: 10">
+  <p class="sub">必須項目を入力してください。任意項目は研究にご協力いただける方のみご記入ください。</p>
+
+  <div class="info-section">
+    <h3 class="info-section-title">基本情報 <span class="req-label">必須</span></h3>
+    <div class="form-grid">
+      <div class="form-row full">
+        <label class="form-label" for="f-id">受験者ID <span class="req">*</span></label>
+        <input type="text" id="f-id" placeholder="例: P001" oninput="checkInfoForm()">
+        <div id="id-warning" style="display:none; font-size:11px; color:var(--color-danger); padding:6px 8px; background:var(--color-danger-bg); border-radius:6px; margin-top:4px"></div>
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="f-age">年齢</label>
+        <input type="text" id="f-age" placeholder="例: 20">
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="f-gender">性別</label>
+        <select id="f-gender">
+          <option value="">選択してください</option>
+          <option value="female">女性</option>
+          <option value="male">男性</option>
+          <option value="other">その他</option>
+          <option value="na">回答しない</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="f-l1">母語</label>
+        <select id="f-l1">
+          <option value="japanese">日本語</option>
+          <option value="chinese">中国語</option>
+          <option value="korean">韓国語</option>
+          <option value="other">その他</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="f-years">英語学習歴 (年)</label>
+        <input type="text" id="f-years" placeholder="例: 10">
+      </div>
     </div>
   </div>
+
+  <div class="info-section">
+    <h3 class="info-section-title clickable" onclick="toggleSection('info-section-2')">
+      <span id="info-section-2-arrow">▶</span> 学習・研究文脈情報 <span class="opt-label">任意</span>
+    </h3>
+    <div class="form-grid" id="info-section-2" style="display:none">
+      <div class="form-row">
+        <label class="form-label" for="f-institution">所属機関区分</label>
+        <select id="f-institution">
+          <option value="">選択してください</option>
+          <option value="national_teacher">国立教員養成大学</option>
+          <option value="national_general">国立総合大学</option>
+          <option value="public">公立大学</option>
+          <option value="private">私立大学</option>
+          <option value="graduate">大学院</option>
+          <option value="high_school">高校</option>
+          <option value="junior_high">中学校</option>
+          <option value="other">その他</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="f-major">専攻</label>
+        <select id="f-major">
+          <option value="">選択してください</option>
+          <option value="english">英語教育</option>
+          <option value="japanese">日本語・国語教育</option>
+          <option value="science">科学・理科</option>
+          <option value="social_studies">社会科</option>
+          <option value="math">数学</option>
+          <option value="special_needs">特別支援教育</option>
+          <option value="school_nursing">養護教諭</option>
+          <option value="home_economics">家庭科</option>
+          <option value="school_education">学校教育</option>
+          <option value="other">その他</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="f-grade">学年</label>
+        <select id="f-grade">
+          <option value="">選択してください</option>
+          <option value="undergrad_1">学部1年</option>
+          <option value="undergrad_2">学部2年</option>
+          <option value="undergrad_3">学部3年</option>
+          <option value="undergrad_4">学部4年</option>
+          <option value="master">修士課程</option>
+          <option value="doctor">博士課程</option>
+          <option value="high_1">高校1年</option>
+          <option value="high_2">高校2年</option>
+          <option value="high_3">高校3年</option>
+          <option value="other">その他</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="f-english-start">英語学習開始年齢</label>
+        <input type="text" id="f-english-start" placeholder="例: 7">
+      </div>
+      <div class="form-row full">
+        <label class="form-label" for="f-overseas">海外滞在経験 (英語圏)</label>
+        <select id="f-overseas">
+          <option value="">選択してください</option>
+          <option value="none">なし</option>
+          <option value="under_1month">1ヶ月未満</option>
+          <option value="1_6months">1〜6ヶ月</option>
+          <option value="6months_1year">6ヶ月〜1年</option>
+          <option value="over_1year">1年以上</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="f-cert-type">最近取得した英語資格</label>
+        <select id="f-cert-type">
+          <option value="">選択してください</option>
+          <option value="none">なし</option>
+          <option value="eiken">英検</option>
+          <option value="toeic_lr">TOEIC L&R</option>
+          <option value="toeic_sw">TOEIC S&W</option>
+          <option value="toefl_ibt">TOEFL iBT</option>
+          <option value="toefl_itp">TOEFL ITP</option>
+          <option value="ielts">IELTS</option>
+          <option value="other">その他</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="f-cert-score">スコア・級</label>
+        <input type="text" id="f-cert-score" placeholder="例: 750 / 準1級">
+      </div>
+      <div class="form-row full">
+        <label class="form-label" for="f-cert-date">資格取得時期 (年月)</label>
+        <input type="text" id="f-cert-date" placeholder="例: 2024-06">
+      </div>
+      <div class="form-row full">
+        <label class="form-label" for="f-english-use">日常的な英語使用頻度</label>
+        <select id="f-english-use">
+          <option value="">選択してください</option>
+          <option value="daily">ほぼ毎日</option>
+          <option value="weekly">週に数回</option>
+          <option value="monthly">月に数回</option>
+          <option value="rarely">ほとんどない</option>
+          <option value="study_only">勉強のみ</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <h3 class="info-section-title clickable" onclick="toggleSection('info-section-3')">
+      <span id="info-section-3-arrow">▶</span> 受験環境情報 <span class="opt-label">任意</span>
+    </h3>
+    <div class="form-grid" id="info-section-3" style="display:none">
+      <div class="form-row">
+        <label class="form-label" for="f-handedness">利き手</label>
+        <select id="f-handedness">
+          <option value="">選択してください</option>
+          <option value="right">右利き</option>
+          <option value="left">左利き</option>
+          <option value="both">両利き</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="f-condition">受験時の体調</label>
+        <select id="f-condition">
+          <option value="">選択してください</option>
+          <option value="excellent">非常に良い</option>
+          <option value="good">良い</option>
+          <option value="moderate">普通</option>
+          <option value="poor">あまり良くない</option>
+          <option value="bad">悪い</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="f-device">受験デバイス</label>
+        <select id="f-device">
+          <option value="">選択してください</option>
+          <option value="pc_desktop">デスクトップPC</option>
+          <option value="pc_laptop">ノートPC</option>
+          <option value="tablet">タブレット</option>
+          <option value="smartphone">スマートフォン</option>
+          <option value="other">その他</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="f-environment">受験環境</label>
+        <select id="f-environment">
+          <option value="">選択してください</option>
+          <option value="quiet_room">静かな個室</option>
+          <option value="home">自宅</option>
+          <option value="library">図書館</option>
+          <option value="classroom">教室</option>
+          <option value="cafe">カフェ・公共空間</option>
+          <option value="other">その他</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
   <button class="btn" id="info-btn" onclick="submitInfo()" disabled>次へ →</button>
 </section>
 
@@ -387,7 +548,7 @@
 </section>
 
 <footer>
-  <p>NeoCELP & NeoVST-NJ8 v1.4 — 新JACET8000 + 3PL IRT</p>
+  <p>NeoCELP & NeoVST-NJ8 v1.5 — 新JACET8000 + 3PL IRT</p>
   <p><a href="https://github.com/Ando-Hiro-rs/NeoCELP-VST-NJ8">GitHub リポジトリ</a></p>
 </footer>
 
