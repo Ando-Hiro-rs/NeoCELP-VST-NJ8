@@ -1134,3 +1134,36 @@ footer a:hover { text-decoration: underline; }
   border-radius: 3px;
   margin-left: 4px;
 }
+.exclude-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.precision-badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.precision-badge.tier-top {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.precision-badge.tier-high {
+  background: var(--color-info-bg);
+  color: var(--color-info);
+}
+
+.precision-badge.tier-mid {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+}
+
+.precision-badge.tier-low {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
