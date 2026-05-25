@@ -93,6 +93,7 @@ export function buildSummaryCSV(participant, session, celpResult, vstResult, pra
     ['test_datetime', session.start_time],
     ['consent_agreed', session.consent_agreed ? 1 : 0],
     ['consent_timestamp', session.consent_timestamp || ''],
+    ['data_sharing_agreed', session.data_sharing_agreed ? 1 : 0],
   ];
   if (browserInfo) {
     data.push(
@@ -163,4 +164,64 @@ export function makeFilename(participant, session, type) {
   const timestamp = `${y}${m}${d}_${hh}${mm}${ss}`;
   const id = participant.id || 'anonymous';
   return `NeoCELP-VST_${id}_${session.mode}_${timestamp}_${type}.csv`;
+}
+
+export function sendByEmail(recipientEmail, participant, session, csvBlobs) {
+  const subject = `NeoCELP-VST テスト結果 (${participant.id} / ${session.mode})`;
+  const bodyLines = [
+    `お世話になっております。`,
+    ``,
+    `NeoCELP & NeoVST-NJ8 のテスト結果を送付いたします。`,
+    ``,
+    `■ 受験者情報`,
+    `  ID: ${participant.id}`,
+    `  モード: ${session.mode}`,
+    `  受験日時: ${session.start_time}`,
+    ``,
+    `■ 添付ファイル`,
+    `  以下の CSV ファイルが添付されています:`,
+  ];
+  for (const blob of csvBlobs) {
+    bodyLines.push(`  - ${blob.filename}`);
+  }
+  bodyLines.push(``);
+  bodyLines.push(`本メールにファイルが添付されていない場合は、お手数ですがダウンロードしたファイルを手動で添付してください。`);
+  bodyLines.push(``);
+  bodyLines.push(`---`);
+  bodyLines.push(`このメールは NeoCELP & NeoVST-NJ8 システムから自動生成されました。`);
+
+  const body = bodyLines.join('\n');
+  const mailtoUrl = `mailto:${recipientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+  for (const blob of csvBlobs) {
+    downloadCSV(blob.filename, blob.content);
+  }
+
+  setTimeout(() => {
+    window.location.href = mailtoUrl;
+  }, 500);
+}
+
+export async function shareViaWebShareAPI(participant, session, csvBlobs) {
+  if (!navigator.share || !navigator.canShare) {
+    throw new Error('お使いのブラウザは共有機能に対応していません');
+  }
+
+  const files = csvBlobs.map(blob => {
+    const bom = '\uFEFF';
+    const fileContent = bom + blob.content;
+    return new File([fileContent], blob.filename, { type: 'text/csv' });
+  });
+
+  const shareData = {
+    title: `NeoCELP-VST テスト結果 (${participant.id})`,
+    text: `NeoCELP & NeoVST-NJ8 テスト結果\n受験者ID: ${participant.id}\nモード: ${session.mode}\n受験日時: ${session.start_time}`,
+    files: files,
+  };
+
+  if (!navigator.canShare(shareData)) {
+    throw new Error('このデバイスではファイル共有がサポートされていません');
+  }
+
+  await navigator.share(shareData);
 }
