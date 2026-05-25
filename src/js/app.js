@@ -7,7 +7,7 @@ import {
   sendByEmail, shareViaWebShareAPI
 } from './csv-export.js';
 
-const TEST_VERSION = 'NeoCELP-VST v1.4';
+const TEST_VERSION = 'NeoCELP-VST v1.5';
 const STORAGE_KEY = 'neocelp_vst_participant_ids';
 
 // ★ ここに研究者のメールアドレスを設定してください
@@ -170,6 +170,19 @@ function submitInfo() {
     gender: document.getElementById('f-gender').value,
     l1: document.getElementById('f-l1').value,
     learning_years: document.getElementById('f-years').value.trim(),
+    institution_type: document.getElementById('f-institution').value,
+    major: document.getElementById('f-major').value,
+    grade: document.getElementById('f-grade').value,
+    english_start_age: document.getElementById('f-english-start').value.trim(),
+    overseas_experience: document.getElementById('f-overseas').value,
+    cert_type: document.getElementById('f-cert-type').value,
+    cert_score: document.getElementById('f-cert-score').value.trim(),
+    cert_date: document.getElementById('f-cert-date').value.trim(),
+    english_use_frequency: document.getElementById('f-english-use').value,
+    handedness: document.getElementById('f-handedness').value,
+    condition_rating: document.getElementById('f-condition').value,
+    device_type: document.getElementById('f-device').value,
+    environment_type: document.getElementById('f-environment').value,
   };
   state.session = {
     ...state.session,
@@ -499,11 +512,25 @@ function restart() {
     celpRawTrials: [], vstRawTrials: [],
     celpPracticeResults: [], practiceStats: null,
   });
-  document.getElementById('f-id').value = '';
-  document.getElementById('f-age').value = '';
-  document.getElementById('f-gender').value = '';
-  document.getElementById('f-l1').value = 'japanese';
-  document.getElementById('f-years').value = '';
+  const fieldsToReset = [
+    'f-id', 'f-age', 'f-years', 'f-english-start',
+    'f-cert-score', 'f-cert-date'
+  ];
+  fieldsToReset.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const selectsToReset = [
+    'f-gender', 'f-institution', 'f-major', 'f-grade',
+    'f-overseas', 'f-cert-type', 'f-english-use',
+    'f-handedness', 'f-condition', 'f-device', 'f-environment'
+  ];
+  selectsToReset.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const l1El = document.getElementById('f-l1');
+  if (l1El) l1El.value = 'japanese';
   document.querySelectorAll('.level-opt').forEach(o => o.classList.remove('selected'));
   document.getElementById('level-btn').disabled = true;
   document.getElementById('info-btn').disabled = true;
@@ -517,7 +544,18 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') celpRunner.respond(false);
   }
 });
-
+function toggleSection(sectionId) {
+  const section = document.getElementById(sectionId);
+  const arrow = document.getElementById(sectionId + '-arrow');
+  if (!section || !arrow) return;
+  if (section.style.display === 'none' || section.style.display === '') {
+    section.style.display = 'grid';
+    arrow.textContent = '▼';
+  } else {
+    section.style.display = 'none';
+    arrow.textContent = '▶';
+  }
+}
 window.checkConsentForm = checkConsentForm;
 window.submitConsent = submitConsent;
 window.selectMode = selectMode;
@@ -535,6 +573,7 @@ window.exportVstTrials = exportVstTrials;
 window.exportSummary = exportSummary;
 window.sendDataByEmail = sendDataByEmail;
 window.shareDataViaApps = shareDataViaApps;
+window.toggleSection = toggleSection;
 window.restart = restart;
 
 state.browserInfo = detectBrowserInfo();
