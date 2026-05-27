@@ -98,20 +98,7 @@ export function scoreVST(responses, itemBank) {
   };
 }
 
-export function cleanRtData(trials, options = {}) {
-  const sdThreshold = options.sdThreshold ?? 3.0;
-  const fastThreshold = options.fastThreshold ?? 100;
-  const total = trials.length;
-  const correctTrials = trials.filter(t => t.is_correct);
-  const nWrong = total - correctTrials.length;
-  const afterFast = correctTrials.filter(t => t.rt_ms > fastThreshold);
-  const nFast = correctTrials.length - afterFast.length;
-  if (afterFast.length < 2) {
-    return { total, n_wrong: nWrong, n_fast: nFast, n_outlier: 0,
-             n_valid: afterFast.length, acrrt: 0, sd: 0, cv: 0,
-             priming_effect: 0, syn_mean: 0, nsyn_mean: 0,
-             cleaned_trials: trials };
-  }
+
   const rts = afterFast.map(t => t.rt_ms);
   const meanPre = rts.reduce((s, v) => s + v, 0) / rts.length;
   const sdPre = Math.sqrt(rts.reduce((s, v) => s + (v - meanPre) ** 2, 0) / (rts.length - 1));
