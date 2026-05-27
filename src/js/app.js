@@ -6,7 +6,7 @@ import {
   sendByEmail, shareViaWebShareAPI
 } from './csv-export.js';
 
-const TEST_VERSION = 'NeoVST-NJ8 v2.0';
+const TEST_VERSION = 'VST-NJ8 online vocabulary test fixed v2.0';
 const STORAGE_KEY = 'neovst_participant_ids';
 
 const RESEARCHER_EMAIL = 'ahiro.research1006@gmail.com';
